@@ -75,6 +75,7 @@ func cmdStartServer() error {
 	if err := setting.GetCfg().Load(); err != nil {
 		return errors.New(fmt.Sprint("load configuration", err.Error()))
 	}
+	
 	// Initialize service
 	if err := service.InitDb(); err != nil {
 		return errors.New(fmt.Sprint("database connection", err.Error()))

@@ -5,8 +5,8 @@ import (
 	"app-backend/setting"
 	"context"
 	"fmt"
-	"time"
 	"github.com/patcharp/golib/v2/crypto"
+	"time"
 
 	"github.com/patcharp/golib/v2/cache"
 	"github.com/patcharp/golib/v2/util"
@@ -91,7 +91,6 @@ func InitMongo() error {
 func MongoDbClient() *mongo.Database {
 	return mongoCtx
 }
-
 
 func InitRSA() error {
 	if err := cacheCtx.Get("config:rsa", &setting.GetCfg().PrivateKey); err != nil {
