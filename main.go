@@ -61,6 +61,11 @@ func cleanUpResources() error {
 	if err := setting.GetCfg().Db.Close(); err != nil {
 		return errors.New(fmt.Sprint("close database connection", err.Error()))
 	}
+	logrus.Infoln("Closing redis cache connection")
+	if err := service.CacheClient().Client.Close(); err != nil {
+		return errors.New(fmt.Sprint("close redis cache connection", err.Error()))
+	}
+
 	return nil
 }
 
@@ -77,7 +82,15 @@ func cmdStartServer() error {
 	if err := service.MigrateDbSchema(); err != nil {
 		return errors.New(fmt.Sprint("migrate database schema", err.Error()))
 	}
-
+	if err := service.InitCache(); err != nil {
+		return errors.New(fmt.Sprint("cache connection", err.Error()))
+	}
+	if err := service.InitMongo(); err != nil {
+		return errors.New(fmt.Sprint("mongodb connection ->", err.Error()))
+	}
+	if err := service.InitRSA(); err != nil {
+		return errors.New(fmt.Sprint("Init RSA key", err.Error()))
+	}
 	// Api router register
 	if err := api.Register(); err != nil {
 		return errors.New(fmt.Sprint("api route register", err.Error()))
