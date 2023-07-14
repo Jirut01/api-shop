@@ -17,6 +17,7 @@ func Register() error {
 	api := app.Group("/api")
 	api.Post("/login", apiLogin.Login)
 	api.Get("/logout", apiLogin.Logout)
+	api.Get("/getuser", middleware.AuthSystem(&skipper), apiLogin.GetUser)
 
 
 	admin := api.Group("/admin", middleware.AdminAuth(&skipper))

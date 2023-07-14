@@ -1,12 +1,12 @@
 package login
 
 import (
-	"github.com/patcharp/golib/v2/helper"
 	"app-backend/middleware"
 	"app-backend/model"
 	validatormsg "app-backend/package/validator_msg"
 	"app-backend/service"
 	"fmt"
+	"github.com/patcharp/golib/v2/helper"
 	"time"
 
 	"github.com/go-playground/validator"
@@ -329,3 +329,24 @@ func Logout(ctx *fiber.Ctx) error {
 	return helper.HttpOk(ctx, "success")
 }
 
+func GetUser(ctx *fiber.Ctx) error {
+
+	claim, err := middleware.GetAuthUser(ctx)
+	if err != nil {
+		return ctx.Status(fiber.StatusUnauthorized).JSON(Result{
+			Status:    fiber.StatusUnauthorized,
+			Message:   "unauthorized",
+			MessageTh: "ยืนยันตัวตนไม่สำเร็จ",
+			Error:     "unauthorized",
+		})
+	}
+	return ctx.Status(fiber.StatusOK).JSON(Result{
+		Status:    fiber.StatusOK,
+		Message:   "success",
+		Data: map[string]interface{}{
+			"first_name_th": claim.FirstNameTh,
+			"last_name_th":  claim.LastNameTh,
+			"username":      claim.Username,
+		},
+	})
+}
