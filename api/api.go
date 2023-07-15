@@ -1,8 +1,8 @@
 package api
 
 import (
-	apiProduct "app-backend/api/product"
 	apiLogin "app-backend/api/login"
+	apiProduct "app-backend/api/product"
 	"app-backend/middleware"
 	"app-backend/setting"
 
@@ -19,17 +19,17 @@ func Register() error {
 	api.Get("/logout", apiLogin.Logout)
 	api.Get("/getuser", middleware.AuthSystem(&skipper), apiLogin.GetUser)
 
-
 	admin := api.Group("/admin", middleware.AdminAuth(&skipper))
 	admin.Post("/register", apiLogin.RegistorUser)
+	admin.Get("/get-doc-user", apiLogin.GetDocUser)
 
 	// middleware.ClearCheckApiCache()   เคลีย chache
- 
+
 	// ===== Product ======
 	product := api.Group("product", middleware.AuthSystem(&skipper))
 	product.Post("/add-prodcut", apiProduct.AddProduct)
-	product.Post("/upload-img-product",apiProduct.ImgProductUpload, middleware.ClearCheckApiCache())
-	product.Delete("/remove-img-product",apiProduct.ImgProductRemove)
+	product.Post("/upload-img-product", apiProduct.ImgProductUpload, middleware.ClearCheckApiCache())
+	product.Delete("/remove-img-product", apiProduct.ImgProductRemove)
 
 	return nil
 }
